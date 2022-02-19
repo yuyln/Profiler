@@ -23,7 +23,7 @@ extern "C"{
         struct Node *n;
     } Node;
 
-    Node *nodes = NULL;
+    static Node *nodes = NULL;
     static size_t i = 0;
 
     size_t StartMeasure(const char *name);
