@@ -4,7 +4,6 @@
 #define _POSIX_C_SOURCE 199310L
 #endif
 
-#define PROFILER_IMPLEMENTATION
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
