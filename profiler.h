@@ -27,7 +27,7 @@ extern "C"{
 
     size_t StartMeasure(const char *name);
     double EndMeasure(const char *name);
-    void PrintAll();
+    void PrintAll(FILE *stream);
 
 #ifdef __cplusplus
 }
@@ -61,6 +61,12 @@ size_t StartMeasure(const char *name)
 
     while (p1->n != NULL)
     {
+        int r = strcmp(name, p1->name);
+        if (r == 0)
+        {
+            clock_gettime(CLOCK_REALTIME, &p1->T1);
+            return p1->i;
+        }
         p1 = p1->n;
     }
     p1->n = p;
@@ -83,16 +89,16 @@ double EndMeasure(const char *name)
     }
     int dts = p->T2.tv_sec - p->T1.tv_sec;
     int dtns = p->T2.tv_nsec - p->T1.tv_nsec;
-    p->dt = (double)dts + (double)dtns / 1.0e9;
+    p->dt += (double)dts + (double)dtns / 1.0e9;
     return p->dt;
 }
 
-void PrintAll()
+void PrintAll(FILE *stream)
 {
     Node *p = nodes;
     while (p != NULL)
     {
-        printf("[ %s ] -> [ %.9f ] seg\n", p->name, p->dt);
+        fprintf(stream, "[ %s ] -> [ %.9f ] seg\n", p->name, p->dt);
         p = p->n;
     }
 }
