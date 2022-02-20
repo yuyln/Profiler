@@ -22,7 +22,7 @@ extern "C"{
         struct Node *n;
     } Node;
 
-    static Node *nodes = NULL;
+    static Node *nodes;
     static size_t i = 0;
 
     size_t StartMeasure(const char *name);
@@ -38,12 +38,15 @@ extern "C"{
 #ifdef PROFILER_IMPLEMENTATION
 size_t StartMeasure(const char *name)
 {
+    struct timespec tempt;
+    clock_gettime(CLOCK_REALTIME, &tempt);
+
     if (i == 0)
     {
         nodes = (Node*)malloc(sizeof(Node));
         nodes->i = 0;
+        nodes->T1 = tempt;
         nodes->name = (char*)name;
-        clock_gettime(CLOCK_REALTIME, &nodes->T1);
         nodes->n = NULL;
         nodes->dt = 0.0;
         return i++;
@@ -55,7 +58,7 @@ size_t StartMeasure(const char *name)
     p->i = i;
     p->n = NULL;
     p->dt = 0.0;
-    clock_gettime(CLOCK_REALTIME, &p->T1);
+    p->T1 = tempt;
 
     Node *p1 = nodes;
 
@@ -64,7 +67,7 @@ size_t StartMeasure(const char *name)
         int r = strcmp(name, p1->name);
         if (r == 0)
         {
-            clock_gettime(CLOCK_REALTIME, &p1->T1);
+            p1->T1 = tempt;
             return p1->i;
         }
         p1 = p1->n;
@@ -75,7 +78,13 @@ size_t StartMeasure(const char *name)
 
 double EndMeasure(const char *name)
 {
+    struct timespec tempt;
+    clock_gettime(CLOCK_REALTIME, &tempt);
     Node *p = nodes;
+    if (i == 0)
+    {
+        return -1.0;
+    }
     while (p != NULL)
     {
         int r = strcmp(p->name, name);
@@ -84,7 +93,7 @@ double EndMeasure(const char *name)
             p = p->n;
             continue;
         }
-        clock_gettime(CLOCK_REALTIME, &p->T2);
+        p->T2 = tempt;
         break;
     }
     int dts = p->T2.tv_sec - p->T1.tv_sec;
