@@ -9,29 +9,22 @@
 #include <time.h>
 #include <string.h>
 
-#ifdef __cplusplus
-extern "C"{
-#endif
+typedef struct Node
+{
+    char *name;
+    size_t i;
+    struct timespec T1, T2;
+    double dt;
+    struct Node *n;
+} Node;
 
-    typedef struct Node
-    {
-        char *name;
-        size_t i;
-        struct timespec T1, T2;
-        double dt;
-        struct Node *n;
-    } Node;
+static Node *nodes;
+static size_t i = 0;
 
-    static Node *nodes;
-    static size_t i = 0;
+size_t StartMeasure(const char *name);
+double EndMeasure(const char *name);
+void PrintAll(FILE *stream);
 
-    size_t StartMeasure(const char *name);
-    double EndMeasure(const char *name);
-    void PrintAll(FILE *stream);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
 
