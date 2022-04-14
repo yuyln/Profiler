@@ -25,9 +25,6 @@ size_t StartMeasure(const char *name);
 double EndMeasure(const char *name);
 void PrintAll(FILE *stream);
 
-
-#endif
-
 #ifdef PROFILER_IMPLEMENTATION
 size_t StartMeasure(const char *name)
 {
@@ -104,5 +101,7 @@ void PrintAll(FILE *stream)
         p = p->n;
     }
 }
+
+#endif
 
 #endif
