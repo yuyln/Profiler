@@ -3,8 +3,7 @@
 #define __PROFILER_IMPLEMENTATION
 #include "profiler.h"
 
-int main(void)
-{
+int main(void) {
     StartMeasure("aa");
     usleep(3000000);
     EndMeasure("aa");
