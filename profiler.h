@@ -95,7 +95,7 @@ void EndMeasure(const char* name) {
 }
 
 static void FreeList(PROFILER(elem) *head) {
-    if (head == NULL) return;
+    if (!head) return;
     
     FreeList(head->next);
     if (head->name) free(head->name);
