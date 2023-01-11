@@ -40,8 +40,7 @@ static size_t hash(const char *name) {
     return r % __PROFILER_TABLE_MAX;
 }
 
-static PROFILER(elem) initelem(const char* name)
-{
+static PROFILER(elem) initelem(const char* name) {
     PROFILER(elem) ret = {0};
     size_t len = strlen(name);
     ret.name = (char*)calloc(len + 1, 1);
