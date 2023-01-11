@@ -1,9 +1,7 @@
-#include <stdio.h>
-#define PROFILER_IMPLEMENTATION
-#include <stdlib.h>
-#include "profiler.h"
-#include <time.h>
 #include <unistd.h>
+
+#define __PROFILER_IMPLEMENTATION
+#include "profiler.h"
 
 int main(void)
 {
@@ -27,6 +25,7 @@ int main(void)
     usleep(1000000);
     EndMeasure("cc1");
 
-    PrintAll(stdout);
+    DumpMeasures(stdout);
+
     return 0;
 }

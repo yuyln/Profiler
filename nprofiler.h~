@@ -29,10 +29,24 @@ void EndMeasure(const char* name);
 void DumpMeasures(FILE *file);
 
 #endif //__PROFILER_H
-
+#define __PROFILER_IMPLEMENTATION
 
 #ifdef __PROFILER_IMPLEMENTATION
 
+/*void printelem(PROFILER(elem) elem) {
+  printf("--------------\n|%s|\n|sec: %lld ns: %ld|\n|sec: %lld ns: %ld|\n|next: %p|\n------------\n",
+	 elem.name, elem.T1.tv_sec, elem.T1.tv_nsec, elem.T2.tv_sec, elem.T2.tv_nsec, (void*)elem.next);
+}
+
+void printtable() {
+  for (size_t i = 0; i < __PROFILER_TABLE_MAX; ++i) {
+    PROFILER(elem) *head = &PROFILER(table)[i];
+    while (head) {
+      if (head->name) printelem(*head);
+      head = head->next;
+    }
+  }
+  }*/
 
 static size_t hash(const char *name) {
     size_t r = 0;
@@ -94,11 +108,10 @@ void EndMeasure(const char* name) {
     }
 }
 
-static void FreeList(PROFILER(elem) *head) {
-    if (head == NULL) return;
-    
+void FreeList(PROFILER(elem) *head) {
+    if (!head) return;
+    if (!head->next) { free(head); return;}
     FreeList(head->next);
-    if (head->name) free(head->name);
     free(head);
 }
 
@@ -114,8 +127,6 @@ void DumpMeasures(FILE *file) {
     
         head = &PROFILER(table)[i];
         FreeList(head->next);
-	
-	free(head->name);
         memset(head, 0, sizeof(PROFILER(elem)));
     }
 }
